@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - Apex Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+        body::before {
+            top: -10%; left: -10%;
+            width: 400px; height: 400px;
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+        body::after {
+            bottom: -10%; right: -10%;
+            width: 300px; height: 300px;
+            background-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 500px;
+            z-index: 10;
+        }
+
+        .login-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        .back-link:hover { color: var(--text-primary); }
+
+        .success-msg {
+            color: var(--success);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <a href="login.html" class="back-link">← Back to Login</a>
+        
+        <div class="login-card">
+            <div class="text-center mb-8">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📝</div>
+                <h2>Student Registration</h2>
+                <p class="text-muted mt-2" style="font-size: 0.875rem;">Create your digital school profile</p>
+            </div>
+
+            <div id="success-box" class="success-msg">
+                Registration successful! Redirecting to login...
+            </div>
+
+            <form id="register-form">
+                <div class="form-group grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="reg-name" class="form-control" placeholder="e.g. Aman Verma" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Class Section</label>
+                        <select id="reg-class" class="form-control" required style="background: var(--bg-secondary); color: white;">
+                            <option value="9-A">Select Class...</option>
+                            <option value="9-A">9-A</option>
+                            <option value="10-A">10-A</option>
+                            <option value="11-SCI">11-Science</option>
+                            <option value="12-COM">12-Commerce</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Roll Number</label>
+                        <input type="text" id="reg-roll" class="form-control" placeholder="e.g. 102" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Mobile Number</label>
+                        <input type="tel" id="reg-mobile" class="form-control" placeholder="10-digit number" pattern="[0-9]{10}" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="reg-email" class="form-control" placeholder="student@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Create Password</label>
+                    <input type="password" id="reg-pass" class="form-control" placeholder="••••••••" minlength="6" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block mt-8">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/db.js"></script>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Registering...';
+
+            const newStudent = {
+                name: document.getElementById('reg-name').value,
+                class: document.getElementById('reg-class').value,
+                rollNo: document.getElementById('reg-roll').value,
+                mobile: document.getElementById('reg-mobile').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-pass').value
+            };
+
+            // Save to Mock DB
+            if (db.registerStudent(newStudent)) {
+                document.getElementById('register-form').style.display = 'none';
+                document.getElementById('success-box').style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>

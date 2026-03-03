@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apex International Academy - Home</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Specific Home Styles */
+      .hero {
+        min-height: calc(100vh - 80px); /* Minus header */
+        display: flex;
+        align-items: center;
+        background: radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.15) 0%, transparent 40%),
+                    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                    var(--bg-dark);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -20%;
+        right: -10%;
+        width: 60%;
+        height: 100%;
+        background: radial-gradient(
+          circle,
+          var(--accent-orange) 0%,
+          transparent 70%
+        );
+        opacity: 0.08;
+        border-radius: 50%;
+        filter: blur(80px);
+        animation: float 10s ease-in-out infinite;
+      }
+
+      .hero-content {
+        z-index: 10;
+      }
+
+      .hero-title {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.1;
+      }
+
+      .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        max-width: 600px;
+      }
+
+      .portals-grid {
+        margin-top: 3rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      .portal-card {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        transition: all var(--transition-normal);
+      }
+
+      .portal-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--accent-primary);
+      }
+
+      .portal-icon {
+        font-size: 2.5rem;
+        color: var(--accent-primary);
+        margin-bottom: 1rem;
+      }
+
+      .features {
+        background-color: var(--bg-secondary);
+      }
+
+      .feature-card {
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.5rem;
+        }
+        .portals-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+        
+        /* New Section Styles */
+        .faculty-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-primary); margin-bottom: 1rem; }
+        .gallery-nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+        .gallery-tab { padding: 0.5rem 1.5rem; background: var(--bg-card); cursor: pointer; border-radius: var(--radius-full); transition: var(--transition-fast); }
+        .gallery-tab.active { background: var(--accent-primary); color: white; }
+        .gallery-grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .gallery-grid.active { display: grid; }
+        .gallery-item { width: 100%; height: 250px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.1); }
+        .video-item { width: 100%; height: 250px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+  </head>
+    <!-- Navigation -->
+    <header class="header">
+      <div class="container flex justify-between items-center py-4">
+        <a href="index.html" class="logo flex items-center gap-2">
+          <span style="font-size: 1.5rem">🏫</span>
+          <span style="font-weight: 700; letter-spacing: -0.5px" id="dyn-school-name"
+            >Apex Academy</span
+          >
+        </a>
+        <nav class="nav flex items-center gap-8">
+          <a href="index.html" class="nav-link active">Home</a>
+          <a href="facilities.html" class="nav-link">Facilities</a>
+          <a href="faculty.html" class="nav-link">Faculty</a>
+          <a href="gallery.html" class="nav-link">Gallery</a>
+          <a href="contact.html" class="nav-link">Contact</a>
+          <a
+            href="login.html"
+            class="btn-nav-login"
+            >Login Portal</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero relative overflow-hidden flex items-center reveal">
+        <div class="container relative z-10">
+          <div class="max-w-2xl card-float" style="padding: 3rem; background: rgba(15, 23, 42, 0.4); border-color: rgba(255,255,255,0.05); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+            <span class="badge badge-orange mb-4 inline-block" style="animation: pulseGlow 3s infinite;">Admission Open 2024-25</span>
+            <h1 class="hero-title" id="dyn-hero-title">
+              Empowering Minds, Shaping the Future
+            </h1>
+            <p class="text-xl text-muted mb-10 leading-relaxed" id="dyn-hero-subtitle">
+              A premium institution dedicated to excellence in education, character building, and innovation.
+            </p>
+            <div class="flex gap-6 mt-8">
+              <a href="contact.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Apply for Admission</a>
+              <a href="facilities.html" class="btn btn-outline" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Explore Facilities</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Animated Elements -->
+        <div class="absolute top-20 left-10 w-24 h-24 rounded-full" style="background: linear-gradient(135deg, var(--accent-orange), var(--accent-red)); opacity: 0.1; filter: blur(20px); animation: float 6s infinite;"></div>
+        <div class="absolute bottom-20 right-20 w-32 h-32 rounded-full" style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); opacity: 0.1; filter: blur(30px); animation: float 8s infinite reverse;"></div>
+      </section>
+
+      <!-- About Us Section -->
+      <section id="about" class="section reveal">
+        <div class="container">
+          <div class="grid grid-cols-2 gap-16 items-center">
+            <div class="relative group">
+              <div class="card-float p-0 overflow-hidden relative z-10" style="height: 480px; border-radius: var(--radius-xl); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+                <img src="https://images.unsplash.com/photo-1541339907198-e08759dfc3ef?w=800&auto=format&fit=crop&q=80" alt="School Campus" class="w-full h-full object-cover hover-scale">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent pointer-events-none"></div>
+              </div>
+              <div class="absolute -bottom-8 -right-8 z-20 card-float p-8 text-center" style="background: linear-gradient(135deg, var(--accent-orange), var(--accent-red)); border: none; box-shadow: 0 20px 40px rgba(249, 115, 22, 0.4);">
+                <h4 class="text-5xl font-black text-white mb-2" style="font-size: 3.5rem;">25+</h4>
+                <p class="text-white font-bold text-lg opacity-90">Years of<br>Excellence</p>
+              </div>
+              <!-- Decorative background element -->
+              <div class="absolute top-10 -left-10 w-full h-full border-2 border-slate-700 rounded-2xl z-0" style="border-radius: var(--radius-xl); opacity: 0.5;"></div>
+            </div>
+            <div class="reveal" style="transition-delay: 200ms;">
+              <span class="section-title-glow">About Our Academy</span>
+              <h2 class="mb-8 text-5xl">Legacy of <span class="text-gradient">Quality Education</span></h2>
+              <p class="text-muted text-lg leading-relaxed mb-8" id="dyn-about-text">
+                Founded in 1995, Apex International Academy has been at the forefront of quality education. We provide a holistic environment that nurtures intellectual growth and creativity. Our mission is to prepare students for the challenges of the 21st century while instilling core values.
+              </p>
+              <div class="grid grid-cols-2 gap-6">
+                <div class="card-float p-4 flex items-center gap-4" style="padding: 1rem 1.5rem; margin-bottom: 0;">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(249,115,22,0.15); color: var(--accent-orange);">✔</div>
+                  <p class="font-bold">Certified Faculty</p>
+                </div>
+                <div class="card-float p-4 flex items-center gap-4" style="padding: 1rem 1.5rem; margin-bottom: 0;">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(59,130,246,0.15); color: var(--accent-primary);">✔</div>
+                  <p class="font-bold">Smart Classrooms</p>
+                </div>
+                <div class="card-float p-4 flex items-center gap-4" style="padding: 1rem 1.5rem; margin-bottom: 0;">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(16,185,129,0.15); color: var(--success);">✔</div>
+                  <p class="font-bold">Holistic Growth</p>
+                </div>
+                <div class="card-float p-4 flex items-center gap-4" style="padding: 1rem 1.5rem; margin-bottom: 0;">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(239,68,68,0.15); color: var(--accent-red);">✔</div>
+                  <p class="font-bold">Global Outreach</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section class="section bg-secondary reveal" style="background-color: var(--bg-card); position: relative;">
+        <div class="container">
+          <div class="text-center mb-12">
+            <span class="badge badge-red mb-4">Testimonials</span>
+            <h2>What Our Community Says</h2>
+          </div>
+          <div class="grid grid-cols-3 gap-8" id="dyn-testimonials-grid">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact CTA Banner -->
+      <section class="section reveal">
+        <div class="container">
+          <div class="card-float text-center py-16 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(30,27,75,0.8) 0%, rgba(15,23,42,0.9) 100%); border-color: rgba(249,115,22,0.3); padding: 5rem 2rem;">
+            <!-- Background Orbs -->
+            <div class="absolute top-0 right-0 w-64 h-64 rounded-full" style="background: radial-gradient(circle, var(--accent-orange) 0%, transparent 70%); opacity: 0.1; transform: translate(30%, -30%);"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full" style="background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%); opacity: 0.1; transform: translate(-30%, 30%);"></div>
+            
+            <div class="relative z-10">
+              <span class="section-title-glow">Join Us</span>
+              <h2 class="text-5xl mb-6 font-black">Ready to Start Your Journey?</h2>
+              <p class="text-xl text-muted mb-10 max-w-2xl mx-auto leading-relaxed">Take the first step towards a bright future. Join our community of excellence and unlock your true potential.</p>
+              <a href="contact.html" class="btn btn-primary" style="padding: 1.2rem 3.5rem; font-size: 1.2rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                Apply for Admission Now
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="py-12 border-t border-white border-opacity-5">
+      <div class="container">
+        <div class="flex justify-between items-center">
+          <div class="logo flex items-center gap-2">
+            <span style="font-size: 1.5rem">🏫</span>
+            <span style="font-weight: 700" id="footer-school-name">Apex Academy</span>
+          </div>
+          <p class="text-muted text-sm">
+            &copy; 2024 Apex International Academy. All rights reserved.
+          </p>
+          <div class="flex gap-6">
+            <a href="#" class="text-muted hover:text-white transition-colors">Facebook</a>
+            <a href="#" class="text-muted hover:text-white transition-colors">Twitter</a>
+            <a href="#" class="text-muted hover:text-white transition-colors">Instagram</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/db.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const db = new Database();
+        const data = db.getData();
+
+        if (data.content) {
+          document.getElementById("dyn-school-name").textContent = data.content.schoolName;
+          document.getElementById("footer-school-name").textContent = data.content.schoolName;
+          document.getElementById("dyn-hero-title").textContent = data.content.heroTitle;
+          document.getElementById("dyn-hero-subtitle").textContent = data.content.heroSubtitle;
+          document.getElementById("dyn-about-text").textContent = data.content.aboutText;
+          document.title = `${data.content.schoolName} - Excellence in Education`;
+        }
+
+        // Testimonials
+        const testimonialGrid = document.getElementById("dyn-testimonials-grid");
+        if(data.testimonials) {
+            data.testimonials.forEach(t => {
+                testimonialGrid.innerHTML += `
+                  <div class="card-float reveal" style="border-radius: var(--radius-md);">
+                    <div class="text-orange mb-4" style="color: var(--accent-orange); font-size: 2rem;">"</div>
+                    <p class="italic text-muted mb-6">${t.text}</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                      <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-red); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">${t.name.charAt(0)}</div>
+                      <div>
+                        <h4 class="text-sm font-bold">${t.name}</h4>
+                        <p class="text-xs text-muted">${t.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                `;
+            });
+        }
+
+        // Scroll Reveal logic
+        const observerOptions = {
+          threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      });
+    </script>
+  </body>
+</html>

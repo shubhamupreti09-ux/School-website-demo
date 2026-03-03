@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Apex International Academy</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="bg-dark text-primary">
+    <!-- Navigation -->
+    <header class="header">
+      <div class="container flex justify-between items-center py-4">
+        <a href="index.html" class="logo flex items-center gap-2">
+          <span style="font-size: 1.5rem">🏫</span>
+          <span style="font-weight: 700; letter-spacing: -0.5px" id="dyn-school-name"
+            >Apex Academy</span
+          >
+        </a>
+        <nav class="nav flex items-center gap-8">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="facilities.html" class="nav-link">Facilities</a>
+          <a href="faculty.html" class="nav-link">Faculty</a>
+          <a href="gallery.html" class="nav-link">Gallery</a>
+          <a href="contact.html" class="nav-link active">Contact</a>
+          <a href="login.html" class="btn-nav-login">Login Portal</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section reveal">
+        <div class="container">
+          <div class="text-center mb-16">
+            <span class="section-title-glow">Contact & Admissions</span>
+            <h2 class="text-5xl font-black">Get in Touch With Us</h2>
+            <p class="text-muted text-lg max-w-2xl mx-auto">Have questions about admissions or school life? We're here to help you every step of the way.</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-16 items-start">
+            <!-- Left: Contact Form -->
+            <div class="reveal">
+              <div class="card-float" style="padding: 3rem;">
+                <h3 class="text-2xl mb-8">Send us a Message</h3>
+                <form id="contact-form" class="flex flex-col gap-6">
+                  <div class="grid grid-cols-2 gap-6">
+                    <div>
+                      <label class="block text-sm font-bold mb-2 text-muted">Full Name</label>
+                      <input type="text" placeholder="John Doe" class="w-full bg-dark border border-white border-opacity-10 rounded-lg p-4 focus:border-orange-500 transition-all" style="background-color: var(--bg-dark); color: white;">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-bold mb-2 text-muted">Email Address</label>
+                      <input type="email" placeholder="john@example.com" class="w-full bg-dark border border-white border-opacity-10 rounded-lg p-4 focus:border-orange-500 transition-all" style="background-color: var(--bg-dark); color: white;">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold mb-2 text-muted">Subject</label>
+                    <select class="w-full bg-dark border border-white border-opacity-10 rounded-lg p-4 focus:border-orange-500 transition-all" style="background-color: var(--bg-dark); color: white;">
+                      <option>Admission Inquiry</option>
+                      <option>General Support</option>
+                      <option>Feedback</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-bold mb-2 text-muted">Your Message</label>
+                    <textarea rows="5" placeholder="Tell us more..." class="w-full bg-dark border border-white border-opacity-10 rounded-lg p-4 focus:border-orange-500 transition-all" style="background-color: var(--bg-dark); color: white;"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="background: linear-gradient(to right, var(--accent-orange), var(--accent-red)); padding: 1rem 2rem; font-weight: 700;">Send Message</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Right: Info & Map -->
+            <div class="flex flex-col gap-8 reveal">
+              <div class="card-float">
+                <div class="flex items-center gap-6 mb-4">
+                  <div class="glow-icon">📍</div>
+                  <div>
+                    <h3 class="mb-0">Our Location</h3>
+                    <p class="text-muted">123 Education Lane, Knowledge Park, Delhi</p>
+                  </div>
+                </div>
+                <div class="mt-4" style="border-radius: var(--radius-lg); overflow: hidden; height: 250px; border: 1px solid rgba(255,255,255,0.1);">
+                  <iframe id="dyn-map" src="" class="w-full h-full" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-6">
+                <div class="card-float">
+                  <div class="glow-icon mb-4">📧</div>
+                  <h4 class="mb-2">Email</h4>
+                  <a id="dyn-email-link" href="" class="text-sm font-bold" style="color: var(--accent-orange);"></a>
+                </div>
+                <div class="card-float">
+                  <div class="glow-icon mb-4">💬</div>
+                  <h4 class="mb-2">WhatsApp</h4>
+                  <a id="dyn-wa-link" href="" target="_blank" class="text-sm font-bold" style="color: #25D366;">Connect Now</a>
+                </div>
+              </div>
+
+              <div class="card-float" style="border-color: var(--accent-red);">
+                <div class="flex items-center gap-6">
+                  <div class="glow-icon" style="color: var(--accent-red);">🚨</div>
+                  <div>
+                    <h4 class="mb-1">Emergency Help</h4>
+                    <p class="text-2xl font-black text-red" style="color: var(--accent-red);">+91 999 888 777</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="py-12 reveal">
+      <div class="container text-center text-muted text-sm">
+        <p>&copy; 2024 <span id="footer-school-name">Apex Academy</span>. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/db.js"></script>
+    <script>
+      const db = new Database();
+      const data = db.getData();
+
+      // Dynamic Content
+      document.getElementById("dyn-school-name").textContent = data.content.schoolName;
+      document.getElementById("footer-school-name").textContent = data.content.schoolName;
+      
+      if(data.contact) {
+          document.getElementById("dyn-map").src = data.contact.mapEmbed;
+          document.getElementById("dyn-email-link").textContent = data.contact.email;
+          document.getElementById("dyn-email-link").href = `mailto:${data.contact.email}`;
+          document.getElementById("dyn-wa-link").href = `https://wa.me/${data.contact.whatsapp}`;
+      }
+
+      // Scroll Reveal
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('active');
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+  </body>
+</html>

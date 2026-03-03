@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Apex Academy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 80px); /* minus header */
+        }
+
+        .sidebar {
+            background-color: var(--bg-secondary);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0 1rem;
+        }
+
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--accent-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .panel {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Profile Card */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+            object-fit: cover;
+        }
+
+        .profile-details { flex: 1; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-item .label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+        .info-item .val {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .icon-blue { background: rgba(59, 130, 246, 0.2); color: var(--accent-primary); }
+        .icon-green { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .icon-orange { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Fee Portal */
+        .fee-card { margin-bottom: 1.5rem; }
+        .fee-amount { font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin: 1rem 0; }
+        .fee-progress {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        .fee-progress-bar { height: 100%; background-color: var(--success); transition: width 0.5s; }
+
+        /* Tables for Results/Notices */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .data-table th, .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .data-table th { color: var(--text-muted); font-weight: 500; font-size: 0.875rem; }
+        .data-table tr:hover { background-color: rgba(255,255,255,0.02); }
+
+        /* Notice Feed */
+        .notice-list { display: flex; flex-direction: column; gap: 1rem; }
+        .notice-item {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+        .notice-item.global { border-left-color: var(--warning); }
+        .notice-meta { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+
+        @media (max-width: 768px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .sidebar { height: auto; position: static; padding: 1rem 0; }
+            .sidebar-menu { flex-direction: row; overflow-x: auto; padding-bottom: 0.5rem; }
+            .menu-item { white-space: nowrap; }
+            .profile-header { flex-direction: column; text-align: center; }
+            .info-grid, .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container nav">
+            <div class="logo">
+                <span class="logo-icon">🎓</span>
+                Student Corner
+            </div>
+            <div class="nav-links">
+                <span class="text-secondary" id="nav-user-name">Loading...</span>
+                <button class="btn btn-outline" onclick="logout()" style="padding: 0.4rem 1rem; font-size: 0.875rem;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="sidebar-menu">
+                <div class="menu-item active" data-target="dashboard">
+                    <span>📊</span> Dashboard
+                </div>
+                <div class="menu-item" data-target="profile">
+                    <span>👤</span> Digital Profile
+                </div>
+                <div class="menu-item" data-target="fees">
+                    <span>💳</span> Online Fees
+                </div>
+                <div class="menu-item" data-target="results">
+                    <span>📝</span> Results & Reports
+                </div>
+                <div class="menu-item" data-target="notices">
+                    <span>📅</span> Homework & Notices
+                </div>
+                <div class="menu-item" data-target="attendance">
+                    <span>✅</span> Attendance & Leaves
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Dashboard Overview -->
+            <section id="panel-dashboard" class="panel active">
+                <h2 class="mb-8">Welcome back, <span id="dash-name" class="text-primary">Student</span>!</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-blue">📅</div>
+                        <div>
+                            <div class="stat-value" id="dash-attendance">0%</div>
+                            <div class="stat-label">Overall Attendance</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-green">🏆</div>
+                        <div>
+                            <div class="stat-value" id="dash-rank">Top 10%</div>
+                            <div class="stat-label">Class Performance</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-orange">💳</div>
+                        <div>
+                            <div class="stat-value" id="dash-dues">₹0</div>
+                            <div class="stat-label">Pending Fees</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-8" style="grid-template-columns: 60% 40%;">
+                    <div class="card">
+                        <h3>Recent Notices</h3>
+                        <div class="notice-list mt-4" id="dash-notices-mini">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                    <div class="card bg-card" style="background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border: none;">
+                        <h3 style="color: white; margin-bottom: 1rem;">Quick Fee Payment</h3>
+                        <p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem;">Clear your pending dues instantly through our secure gateway.</p>
+                        <button class="btn btn-block" style="background: white; color: var(--accent-primary); font-weight: 700;" onclick="switchTab('fees')">Pay Now →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Digital Profile -->
+            <section id="panel-profile" class="panel">
+                <div class="card">
+                    <div class="profile-header">
+                        <img src="https://via.placeholder.com/150" alt="Profile" class="profile-pic" id="prof-img">
+                        <div class="profile-details">
+                            <h2 id="prof-name">Student Name</h2>
+                            <p class="text-muted" id="prof-class">Class: 10-A | Roll No: 101</p>
+                            <div class="mt-4">
+                                <span class="badge badge-success">Active Status</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-grid mt-8">
+                        <div class="info-item">
+                            <div class="label">Full Name</div>
+                            <div class="val" id="prof-fn">John Doe</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Roll Number</div>
+                            <div class="val" id="prof-roll">101</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Email Address</div>
+                            <div class="val" id="prof-email">student@academy.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Mobile Number</div>
+                            <div class="val" id="prof-mobile">+91 0000000000</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Online Fees -->
+            <section id="panel-fees" class="panel">
+                <h2 class="mb-4">Fee Management</h2>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="card fee-card">
+                        <h3 class="text-muted">Total Pending Dues</h3>
+                        <div class="fee-amount" id="fee-pending">₹0</div>
+                        <div class="fee-progress">
+                            <div class="fee-progress-bar" id="fee-bar" style="width: 50%;"></div>
+                        </div>
+                        <div class="flex justify-between text-muted" style="font-size: 0.875rem;">
+                            <span>Paid: <span id="fee-paid" class="text-primary">₹0</span></span>
+                            <span>Total: <span id="fee-total">₹0</span></span>
+                        </div>
+                        <hr style="border-color: rgba(255,255,255,0.05); margin: 1.5rem 0;">
+                        <h4 class="mb-4">Make a Payment</h4>
+                        <form id="payment-form">
+                            <div class="form-group flex gap-4">
+                                <input type="number" id="pay-amount" class="form-control" placeholder="Enter Amount (₹)" min="1" required>
+                                <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Pay Securely</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h3>Payment History</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Transaction ID</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>01 Apr 2026</td>
+                                    <td>TXN-98234</td>
+                                    <td>₹25000</td>
+                                    <td><span class="badge badge-success">Success</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results & Reports -->
+            <section id="panel-results" class="panel">
+                <h2 class="mb-4">Academic Progress</h2>
+                <div class="card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3>Mid-Term Examination</h3>
+                        <span class="badge badge-primary">Declared on: Mar 10, 2026</span>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Max Marks</th>
+                                <th>Marks Obtained</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                    <div class="flex justify-between items-center mt-8">
+                        <div>
+                            <div class="text-muted" style="font-size: 0.875rem;">Overall Percentage</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--success);" id="res-total">0%</div>
+                        </div>
+                        <button class="btn btn-outline" onclick="window.print()">🖨️ Download Report Card</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Attendance & Leaves -->
+            <section id="panel-attendance" class="panel">
+                <h2 class="mb-4">Attendance & Leave Management</h2>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3>Daily Attendance Log</h3>
+                        <p class="text-muted mb-6">View your presence/absence record for the current month.</p>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Recorded By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="att-log-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>Apply for Leave</h3>
+                        <form id="leave-form" class="mt-4 flex flex-col gap-4">
+                            <div>
+                                <label class="label block mb-2">Start Date</label>
+                                <input type="date" id="leave-start" class="form-control w-full" required>
+                            </div>
+                            <div>
+                                <label class="label block mb-2">End Date</label>
+                                <input type="date" id="leave-end" class="form-control w-full" required>
+                            </div>
+                            <div>
+                                <label class="label block mb-2">Reason</label>
+                                <textarea id="leave-reason" class="form-control w-full" rows="3" placeholder="Explain your reason..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Submit Application</button>
+                        </form>
+
+                        <h3 class="mt-12 mb-4">Request Status</h3>
+                        <div id="leave-status-list" class="flex flex-col gap-4">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="../js/db.js"></script>
+    <script>
+        let studentData = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userState = db.getCurrentUser();
+            
+            // Protect Route
+            if(!userState || userState.role !== 'student') {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            studentData = userState.details;
+            
+            // Navigation Logic
+            const menuItems = document.querySelectorAll('.menu-item');
+            const panels = document.querySelectorAll('.panel');
+
+            window.switchTab = function(targetId) {
+                menuItems.forEach(item => {
+                    if(item.dataset.target === targetId) item.classList.add('active');
+                    else item.classList.remove('active');
+                });
+                panels.forEach(panel => {
+                    if(panel.id === `panel-${targetId}`) panel.classList.add('active');
+                    else panel.classList.remove('active');
+                });
+            }
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => switchTab(item.dataset.target));
+            });
+
+            populateData();
+        });
+
+        function populateData() {
+            // Header / Dash
+            document.getElementById('nav-user-name').textContent = studentData.name;
+            document.getElementById('dash-name').textContent = studentData.name.split(' ')[0];
+            
+            // Attendance Math
+            const att = studentData.attendance;
+            const attPercent = Math.round((att.present / att.total) * 100) || 0;
+            document.getElementById('dash-attendance').textContent = `${attPercent}%`;
+            
+            // Fees Math
+            const fees = studentData.fees;
+            document.getElementById('dash-dues').textContent = `₹${fees.pending.toLocaleString()}`;
+            document.getElementById('fee-pending').textContent = `₹${fees.pending.toLocaleString()}`;
+            document.getElementById('fee-paid').textContent = `₹${fees.paid.toLocaleString()}`;
+            document.getElementById('fee-total').textContent = `₹${fees.total.toLocaleString()}`;
+            const feePercent = Math.round((fees.paid / fees.total) * 100);
+            document.getElementById('fee-bar').style.width = `${feePercent}%`;
+
+            // Setup Payment
+            document.getElementById('pay-amount').max = fees.pending;
+
+            // Profile
+            document.getElementById('prof-img').src = studentData.photo;
+            document.getElementById('prof-name').textContent = studentData.name;
+            document.getElementById('prof-class').textContent = `Class: ${studentData.class} | Roll No: ${studentData.rollNo}`;
+            document.getElementById('prof-fn').textContent = studentData.name;
+            document.getElementById('prof-roll').textContent = studentData.rollNo;
+            document.getElementById('prof-email').textContent = studentData.email;
+            document.getElementById('prof-mobile').textContent = studentData.mobile;
+
+            // Results
+            const fullData = db.getData();
+            const myResult = fullData.results.find(r => r.studentId === studentData.id);
+            if(myResult) {
+                const tbody = document.getElementById('results-body');
+                let totalMarks = 0;
+                let obtMarks = 0;
+                let count = 0;
+
+                for(const [subject, marks] of Object.entries(myResult.subjects)) {
+                    totalMarks += 100;
+                    obtMarks += marks;
+                    count++;
+                    let grade = marks >= 90 ? 'A+' : marks >= 80 ? 'A' : marks >= 70 ? 'B' : marks >= 60 ? 'C' : 'D';
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${subject}</strong></td>
+                        <td>100</td>
+                        <td>${marks}</td>
+                        <td><span class="badge badge-${marks >= 70 ? 'success' : 'warning'}">${grade}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+
+                if(count > 0) {
+                    const pct = Math.round((obtMarks / totalMarks) * 100);
+                    document.getElementById('res-total').textContent = `${pct}%`;
+                }
+            }
+
+            if(filteredNotices.length === 0) {
+                board.innerHTML = "<p class='text-muted'>No notices at the moment.</p>";
+                dashMini.innerHTML = "<p class='text-muted'>No announcements.</p>";
+            }
+
+            // Attendance Log
+            const attLog = document.getElementById('att-log-body');
+            const myAtt = fullData.attendance.filter(a => a.studentId === studentData.id);
+            myAtt.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(a => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${a.date}</td>
+                    <td><span class="badge ${a.status === 'present' ? 'badge-success' : 'badge-danger'}">${a.status.toUpperCase()}</span></td>
+                    <td>Faculty System</td>
+                `;
+                attLog.appendChild(tr);
+            });
+
+            // Leave Status
+            const leaveList = document.getElementById('leave-status-list');
+            const myLeaves = fullData.leaves.filter(l => l.studentId === studentData.id);
+            myLeaves.forEach(l => {
+                const div = document.createElement('div');
+                div.className = 'notice-item';
+                div.style.borderLeftColor = l.status === 'approved' ? 'var(--success)' : l.status === 'rejected' ? 'var(--danger)' : 'var(--warning)';
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <h4 class="mb-0">${l.startDate} to ${l.endDate}</h4>
+                        <span class="badge ${l.status === 'approved' ? 'badge-success' : l.status === 'rejected' ? 'badge-danger' : 'badge-orange'}">${l.status.toUpperCase()}</span>
+                    </div>
+                    <p class="text-sm text-muted mt-2">${l.reason}</p>
+                `;
+                leaveList.appendChild(div);
+            });
+        }
+
+        // Leave Form
+        document.getElementById('leave-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const start = document.getElementById('leave-start').value;
+            const end = document.getElementById('leave-end').value;
+            const reason = document.getElementById('leave-reason').value;
+
+            const fullData = db.getData();
+            const newLeave = {
+                id: 'L' + Date.now(),
+                studentId: studentData.id,
+                startDate: start,
+                endDate: end,
+                reason: reason,
+                status: 'pending'
+            };
+            fullData.leaves.push(newLeave);
+            db.saveData(fullData);
+            alert("Leave application submitted successfully!");
+            location.reload();
+        });
+
+        // Handle Payment Submission
+        document.getElementById('payment-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('pay-amount').value);
+            if(amount > 0 && amount <= studentData.fees.pending) {
+                // Alert simulation
+                const btn = e.target.querySelector('button');
+                btn.textContent = 'Processing...';
+                
+                setTimeout(() => {
+                    // Update DB
+                    const fullData = db.getData();
+                    const me = fullData.students.find(s => s.id === studentData.id);
+                    me.fees.paid += amount;
+                    me.fees.pending -= amount;
+                    db.saveData(fullData);
+                    
+                    alert(`Payment of ₹${amount} successful!`);
+                    location.reload(); // Reload to refresh data view
+                }, 1000);
+            } else {
+                alert("Invalid amount.");
+            }
+        });
+
+        function logout() {
+            db.logout();
+            window.location.href = '../login.html';
+        }
+    </script>
+</body>
+</html>

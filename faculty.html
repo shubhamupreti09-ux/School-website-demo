@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Faculty - Apex International Academy</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="bg-dark text-primary">
+    <!-- Navigation -->
+    <header class="header">
+      <div class="container flex justify-between items-center py-4">
+        <a href="index.html" class="logo flex items-center gap-2">
+          <span style="font-size: 1.5rem">🏫</span>
+          <span style="font-weight: 700; letter-spacing: -0.5px" id="dyn-school-name"
+            >Apex Academy</span
+          >
+        </a>
+        <nav class="nav flex items-center gap-8">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="facilities.html" class="nav-link">Facilities</a>
+          <a href="faculty.html" class="nav-link active">Faculty</a>
+          <a href="gallery.html" class="nav-link">Gallery</a>
+          <a href="contact.html" class="nav-link">Contact</a>
+          <a href="login.html" class="btn-nav-login">Login Portal</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section reveal">
+        <div class="container">
+          <div class="text-center mb-12">
+            <span class="badge badge-red mb-4">Expert Educators</span>
+            <h1 class="text-4xl">Meet Our Faculty</h1>
+            <p class="text-muted mt-4 max-w-2xl mx-auto">
+              Our teachers are more than educators; they are mentors and guides who inspire students to achieve their full potential.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-4 gap-8" id="dyn-faculty-grid">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="py-12 border-t border-white border-opacity-5">
+      <div class="container text-center text-muted text-sm">
+        <p>&copy; 2024 <span id="footer-school-name">Apex Academy</span>. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/db.js"></script>
+    <script>
+      const db = new Database();
+      const data = db.getData();
+
+      // Dynamic School Name
+      document.getElementById("dyn-school-name").textContent = data.content.schoolName;
+      document.getElementById("footer-school-name").textContent = data.content.schoolName;
+
+      // Load Faculty
+      const facGrid = document.getElementById("dyn-faculty-grid");
+      if (data.teachers && data.teachers.length > 0) {
+        data.teachers.forEach((t) => {
+          facGrid.innerHTML += `
+            <div class="card-float text-center reveal">
+              <div class="relative inline-block mb-4">
+                <img src="${t.image}" alt="${t.name}" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-orange); object-fit: cover; margin: 0 auto;">
+              </div>
+              <h3 class="mb-1">${t.name}</h3>
+              <span class="badge badge-red mb-4" style="display:inline-block">${t.subject}</span>
+              <p class="text-muted text-sm">${t.bio || 'Highly qualified educator with a passion for student development.'}</p>
+            </div>
+          `;
+        });
+      }
+
+      // Scroll Reveal
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('active');
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+  </body>
+</html>
