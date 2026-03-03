@@ -439,6 +439,33 @@
                 </div>
             </section>
 
+            <!-- Homework & Notices -->
+            <section id="panel-notices" class="panel">
+                <h2 class="mb-4">Homework & Notices</h2>
+                <div class="grid grid-cols-2 gap-8">
+                    <!-- Global Notices -->
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3>📢 School Announcements</h3>
+                            <span class="badge badge-orange">Global</span>
+                        </div>
+                        <div id="notices-global-list" class="notice-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                    <!-- Class Assignments -->
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3>📝 Class Assignments</h3>
+                            <span class="badge badge-primary">Your Class</span>
+                        </div>
+                        <div id="notices-assignment-list" class="notice-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -541,9 +568,78 @@
                 }
             }
 
-            if(filteredNotices.length === 0) {
-                board.innerHTML = "<p class='text-muted'>No notices at the moment.</p>";
-                dashMini.innerHTML = "<p class='text-muted'>No announcements.</p>";
+            // ---- Load Notices ----
+            const fullNotices = fullData.notices || [];
+            const dashMini = document.getElementById('dash-notices-mini');
+            const globalList = document.getElementById('notices-global-list');
+            const assignList = document.getElementById('notices-assignment-list');
+
+            // Global notices (school-wide)
+            const globalNotices = fullNotices
+                .filter(n => n.type === 'global')
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Assignment notices for student's class
+            const classNotices = fullNotices
+                .filter(n => n.type === 'assignment' && (!n.class || n.class === studentData.class))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const allNotices = [...globalNotices, ...classNotices]
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Mini dashboard notices (latest 3)
+            if (allNotices.length === 0) {
+                dashMini.innerHTML = "<p class='text-muted'>No announcements right now.</p>";
+            } else {
+                dashMini.innerHTML = '';
+                allNotices.slice(0, 3).forEach(n => {
+                    const d = document.createElement('div');
+                    d.className = 'notice-item' + (n.type === 'global' ? ' global' : '');
+                    d.innerHTML = `
+                        <div class="notice-meta">${n.type === 'global' ? '📢 School Notice' : '📝 Assignment'} &bull; ${n.date}</div>
+                        <strong>${n.title}</strong>
+                        <p style="font-size:0.875rem; color:var(--text-muted); margin-top:0.25rem;">${n.content}</p>
+                    `;
+                    dashMini.appendChild(d);
+                });
+            }
+
+            // Full notices panel - global
+            if (globalList) {
+                if (globalNotices.length === 0) {
+                    globalList.innerHTML = "<p class='text-muted'>No school announcements at the moment.</p>";
+                } else {
+                    globalList.innerHTML = '';
+                    globalNotices.forEach(n => {
+                        const d = document.createElement('div');
+                        d.className = 'notice-item global';
+                        d.innerHTML = `
+                            <div class="notice-meta">📢 School Notice &bull; ${n.date}</div>
+                            <strong>${n.title}</strong>
+                            <p style="font-size:0.875rem; margin-top:0.5rem; color:var(--text-secondary);">${n.content}</p>
+                        `;
+                        globalList.appendChild(d);
+                    });
+                }
+            }
+
+            // Full notices panel - assignments
+            if (assignList) {
+                if (classNotices.length === 0) {
+                    assignList.innerHTML = "<p class='text-muted'>No assignments posted yet.</p>";
+                } else {
+                    assignList.innerHTML = '';
+                    classNotices.forEach(n => {
+                        const d = document.createElement('div');
+                        d.className = 'notice-item';
+                        d.innerHTML = `
+                            <div class="notice-meta">📝 ${n.class ? n.class : 'All Classes'} &bull; ${n.date}</div>
+                            <strong>${n.title}</strong>
+                            <p style="font-size:0.875rem; margin-top:0.5rem; color:var(--text-secondary);">${n.content}</p>
+                        `;
+                        assignList.appendChild(d);
+                    });
+                }
             }
 
             // Attendance Log

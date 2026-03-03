@@ -1,19 +1,201 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Our Facilities - Apex International Academy</title>
+    <title>Our Facilities - Renaissance Public School, Gangolihat</title>
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* Hamburger menu */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: background 0.3s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .hamburger:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .hamburger span {
+        display: block;
+        width: 26px;
+        height: 2.5px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+      .hamburger.open span:nth-child(1) {
+        transform: translateY(7.5px) rotate(45deg);
+      }
+      .hamburger.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .hamburger.open span:nth-child(3) {
+        transform: translateY(-7.5px) rotate(-45deg);
+      }
+
+      /* Mobile Nav Overlay */
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(9, 9, 11, 0.97);
+        backdrop-filter: blur(20px);
+        z-index: 1999;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        padding: 2rem;
+      }
+      .mobile-nav.open {
+        display: flex;
+      }
+      .mobile-nav a {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        transition: color 0.3s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-nav a:hover,
+      .mobile-nav a.active {
+        color: var(--accent-orange);
+      }
+      .mobile-nav a.btn-nav-login {
+        background: linear-gradient(
+          135deg,
+          var(--accent-orange) 0%,
+          var(--accent-red) 100%
+        );
+        padding: 0.75rem 2.5rem;
+        border-radius: var(--radius-full);
+        font-size: 1.2rem;
+      }
+      .mobile-nav-close {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--text-muted);
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Facilities grid responsive */
+      .facilities-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+      }
+
+      .facility-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        padding: 2.5rem;
+        border-radius: var(--radius-xl);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+      }
+      .facility-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.04) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+      .facility-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(249, 115, 22, 0.4);
+        box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.2);
+      }
+      .facility-card:hover .glow-icon {
+        transform: scale(1.15) rotate(5deg) translateY(-5px);
+        filter: drop-shadow(0 10px 15px var(--accent-orange));
+      }
+
+      .facility-features {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .facility-tag {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+        background: rgba(249, 115, 22, 0.1);
+        color: var(--accent-orange);
+        border: 1px solid rgba(249, 115, 22, 0.25);
+        font-weight: 600;
+      }
+
+      @media (max-width: 1024px) {
+        .facilities-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .hamburger {
+          display: flex;
+        }
+        .nav {
+          display: none !important;
+        }
+      }
+      @media (max-width: 600px) {
+        .facilities-grid {
+          grid-template-columns: 1fr;
+          gap: 1.2rem;
+        }
+        .facility-card {
+          padding: 1.75rem;
+        }
+        .hero-title {
+          font-size: 2.2rem !important;
+        }
+        .section {
+          padding: 3.5rem 0 !important;
+        }
+        .container {
+          padding: 0 1rem;
+        }
+      }
+    </style>
   </head>
   <body class="bg-dark text-primary">
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-nav" id="mobile-nav">
+      <span class="mobile-nav-close" id="mobile-nav-close">✕</span>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="facilities.html" class="nav-link active">Facilities</a>
+      <a href="faculty.html" class="nav-link">Faculty</a>
+      <a href="gallery.html" class="nav-link">Gallery</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="login.html" class="btn-nav-login">Login Portal</a>
+    </div>
+
     <!-- Navigation -->
     <header class="header">
       <div class="container flex justify-between items-center py-4">
         <a href="index.html" class="logo flex items-center gap-2">
           <span style="font-size: 1.5rem">🏫</span>
-          <span style="font-weight: 700; letter-spacing: -0.5px" id="dyn-school-name"
-            >Apex Academy</span
+          <span style="font-weight: 700; letter-spacing: -0.5px"
+            >Renaissance Public School</span
           >
         </a>
         <nav class="nav flex items-center gap-8">
@@ -24,76 +206,368 @@
           <a href="contact.html" class="nav-link">Contact</a>
           <a href="login.html" class="btn-nav-login">Login Portal</a>
         </nav>
+        <div class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </div>
       </div>
     </header>
 
     <main>
       <!-- Page Header -->
-      <section class="relative flex items-center justify-center overflow-hidden" style="min-height: 45vh; background: url('https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?w=1600&auto=format&fit=crop&q=80') center/cover; position: relative; margin-top: -80px; padding-top: 120px;">
-        <!-- Overlay -->
-        <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(9,9,11,0.8) 0%, rgba(9,9,11,0.95) 100%); backdrop-filter: blur(4px);"></div>
-        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 60%);"></div>
-        
+      <section
+        class="relative flex items-center justify-center overflow-hidden"
+        style="
+          min-height: 45vh;
+          background: url(&quot;https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?w=1600&auto=format&fit=crop&q=80&quot;)
+            center/cover;
+          position: relative;
+          margin-top: -80px;
+          padding-top: 120px;
+        "
+      >
+        <div
+          class="absolute inset-0"
+          style="
+            background: linear-gradient(
+              180deg,
+              rgba(9, 9, 11, 0.8) 0%,
+              rgba(9, 9, 11, 0.95) 100%
+            );
+            backdrop-filter: blur(4px);
+          "
+        ></div>
+        <div
+          class="absolute inset-0"
+          style="
+            background: radial-gradient(
+              circle at 50% 50%,
+              rgba(249, 115, 22, 0.12) 0%,
+              transparent 60%
+            );
+          "
+        ></div>
         <div class="container relative z-10 text-center reveal">
-          <span class="badge badge-orange mb-4" style="animation: pulseGlow 3s infinite;">Campus Excellence</span>
-          <h1 class="text-6xl font-black text-white mb-6" style="text-shadow: 0 4px 20px rgba(0,0,0,0.5);">World-Class Facilities</h1>
-          <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            We provide a nurturing environment equipped with modern infrastructure and state-of-the-art resources to ensure the holistic development of every student.
+          <span
+            class="badge badge-orange mb-4"
+            style="animation: pulseGlow 3s infinite"
+            >Campus Excellence</span
+          >
+          <h1
+            class="hero-title font-black text-white mb-6"
+            style="
+              font-size: 3.5rem;
+              text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            "
+          >
+            World-Class Facilities
+          </h1>
+          <p
+            style="
+              font-size: 1.15rem;
+              color: #cbd5e1;
+              max-width: 700px;
+              margin: 0 auto;
+              line-height: 1.8;
+            "
+          >
+            Renaissance Public School, Gangolihat provides a nurturing
+            environment equipped with modern infrastructure and thoughtfully
+            designed spaces to ensure the holistic development of every student.
           </p>
         </div>
       </section>
 
       <section class="section">
         <div class="container">
-          <div class="grid grid-cols-3 gap-8" id="dyn-facilities-grid">
-            <!-- Populated via JS -->
+          <div class="facilities-grid">
+            <!-- 1. Smart Classrooms -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🖥️</div>
+              <h3>Smart Classrooms</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                Our classrooms are equipped with interactive digital boards,
+                projectors, and high-speed internet, enabling dynamic and
+                engaging lessons. Technology is seamlessly integrated into daily
+                teaching to make learning more effective and enjoyable.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">Interactive Boards</span>
+                <span class="facility-tag">Projectors</span>
+                <span class="facility-tag">Wi-Fi Enabled</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 2. Science Laboratories -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🔬</div>
+              <h3>Science Laboratories</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                Fully equipped Physics, Chemistry, and Biology labs allow
+                students to conduct hands-on experiments and develop scientific
+                temper. Safety-first equipment and experienced lab assistants
+                ensure a secure learning environment.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">Physics Lab</span>
+                <span class="facility-tag">Chemistry Lab</span>
+                <span class="facility-tag">Biology Lab</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 3. Digital Library -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">📚</div>
+              <h3>Library & Reading Room</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                Our well-stocked library houses thousands of books, journals,
+                and reference materials across all subjects. A dedicated reading
+                room with a calm atmosphere encourages a love for reading and
+                independent research among students.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">5000+ Books</span>
+                <span class="facility-tag">Reading Hall</span>
+                <span class="facility-tag">Reference Section</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 4. Computer Lab -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">💻</div>
+              <h3>Computer Laboratory</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                A modern computer lab with the latest hardware and software
+                empowers students with essential digital literacy skills.
+                Students learn programming, graphic design, and office tools in
+                a hands-on environment with dedicated IT instructors.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">Latest Systems</span>
+                <span class="facility-tag">High-Speed Net</span>
+                <span class="facility-tag">Coding Classes</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 5. Sports Ground -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">⚽</div>
+              <h3>Sports Ground & Courts</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                A large, well-maintained sports ground supports cricket,
+                football, volleyball, and athletics. Badminton and basketball
+                courts are also available. Sports education is an integral part
+                of our curriculum, fostering teamwork, discipline, and fitness.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">Cricket Ground</span>
+                <span class="facility-tag">Football</span>
+                <span class="facility-tag">Badminton</span>
+                <span class="facility-tag">Basketball</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 6. Art & Craft Room -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🎨</div>
+              <h3>Art & Craft Studio</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                A dedicated creative space stocked with art supplies, craft
+                materials, and drawing tools helps students express their
+                imagination freely. Regular art competitions and exhibitions
+                showcase student talent and nurture their creative confidence.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">Painting</span>
+                <span class="facility-tag">Clay Modelling</span>
+                <span class="facility-tag">Exhibitions</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 7. Music & Dance Room -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🎵</div>
+              <h3>Music & Performing Arts</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                Our music room is equipped with instruments including harmonium,
+                tabla, guitar, and keyboard, supported by trained music
+                teachers. The dance studio provides space for classical, folk,
+                and contemporary dance training that enriches cultural
+                appreciation.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">Instruments</span>
+                <span class="facility-tag">Dance Studio</span>
+                <span class="facility-tag">Cultural Events</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 8. Canteen -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🍱</div>
+              <h3>Hygienic School Canteen</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                A clean and hygienic canteen provides nutritious, freshly
+                prepared meals and snacks at affordable prices. The menu is
+                carefully designed to meet the nutritional needs of growing
+                students, with a focus on healthy, balanced food choices.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">Hygienic Kitchen</span>
+                <span class="facility-tag">Nutritious Food</span>
+                <span class="facility-tag">Affordable Prices</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 9. Transport -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🚌</div>
+              <h3>Safe School Transport</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                A reliable fleet of school buses covers major routes in and
+                around Gangolihat, ensuring safe and timely transport for
+                students. All vehicles are maintained regularly and driven by
+                experienced, trained drivers with attendants on board.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">GPS Tracked</span>
+                <span class="facility-tag">Experienced Drivers</span>
+                <span class="facility-tag">Multiple Routes</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 10. Medical Room -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🏥</div>
+              <h3>Medical & Health Care</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                A dedicated first-aid room staffed by a trained nurse ensures
+                prompt medical attention for students throughout the school day.
+                Regular health check-ups are organized for all students to
+                monitor their physical well-being throughout the academic year.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">First Aid</span>
+                <span class="facility-tag">Trained Nurse</span>
+                <span class="facility-tag">Health Checkups</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 11. Auditorium / Hall -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🎭</div>
+              <h3>School Auditorium</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                A spacious multi-purpose auditorium hosts annual functions,
+                debates, competitions, parent-teacher meetings, and cultural
+                programs. Equipped with professional audio-visual systems and
+                comfortable seating for a premium event experience.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">A/V System</span>
+                <span class="facility-tag">Stage Setup</span>
+                <span class="facility-tag">Large Capacity</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
+
+            <!-- 12. Safe Campus -->
+            <div class="facility-card reveal">
+              <div class="glow-icon">🔒</div>
+              <h3>Safe & Secure Campus</h3>
+              <p class="text-muted" style="line-height: 1.7">
+                The school campus is monitored by CCTV cameras at all key points
+                and secured by trained security personnel. Controlled entry and
+                exit procedures, biometric attendance for staff, and a
+                child-safe environment ensure peace of mind for parents.
+              </p>
+              <div class="facility-features">
+                <span class="facility-tag">CCTV Cameras</span>
+                <span class="facility-tag">24/7 Security</span>
+                <span class="facility-tag">Controlled Entry</span>
+              </div>
+              <div class="mt-auto pt-4">
+                <span class="badge badge-orange">Premium</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="py-8 border-t border-white border-opacity-5">
+    <footer
+      class="py-8 border-t"
+      style="border-color: rgba(255, 255, 255, 0.05)"
+    >
       <div class="container text-center text-muted text-sm">
-        <p>&copy; 2024 <span id="footer-school-name">Apex Academy</span>. All rights reserved.</p>
+        <p>
+          &copy; 2025 Renaissance Public School, Gangolihat. All rights
+          reserved.
+        </p>
       </div>
     </footer>
 
-    <script src="js/db.js"></script>
     <script>
-      const db = new Database();
-      const data = db.getData();
+      // Scrollreveal
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("active");
+          });
+        },
+        { threshold: 0.08 },
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
 
-      // Dynamic School Name
-      document.getElementById("dyn-school-name").textContent = data.content.schoolName;
-      document.getElementById("footer-school-name").textContent = data.content.schoolName;
-
-      // Load Facilities
-      const facilitiesGrid = document.getElementById("dyn-facilities-grid");
-      if (data.facilities) {
-        data.facilities.forEach((f) => {
-          facilitiesGrid.innerHTML += `
-            <div class="card-float reveal">
-              <div class="glow-icon">${f.icon}</div>
-              <h3>${f.title}</h3>
-              <p class="text-muted mt-4">${f.desc}</p>
-              <div class="mt-auto pt-4">
-                <span class="badge badge-orange">Premium</span>
-              </div>
-            </div>
-          `;
-        });
-      }
-
-      // Scroll Reveal logic
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-          }
-        });
-      }, { threshold: 0.1 });
-
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      // Hamburger menu
+      const ham = document.getElementById("hamburger");
+      const mobileNav = document.getElementById("mobile-nav");
+      const closeBtn = document.getElementById("mobile-nav-close");
+      ham.addEventListener("click", () => {
+        ham.classList.toggle("open");
+        mobileNav.classList.toggle("open");
+        document.body.style.overflow = mobileNav.classList.contains("open")
+          ? "hidden"
+          : "";
+      });
+      closeBtn.addEventListener("click", () => {
+        ham.classList.remove("open");
+        mobileNav.classList.remove("open");
+        document.body.style.overflow = "";
+      });
     </script>
   </body>
 </html>

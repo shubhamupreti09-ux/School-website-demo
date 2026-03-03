@@ -402,38 +402,40 @@
             document.getElementById('tot-students').textContent = data.students.length;
             document.getElementById('tot-teachers').textContent = data.teachers.length;
             
+            // Financials Page
             let totalRev = 0;
             let totalPend = 0;
-            data.students.forEach(s => {
-                totalRev += s.fees.paid;
-                totalPend += s.fees.pending;
-            });
-            document.getElementById('tot-revenue').textContent = `₹${totalRev.toLocaleString()}`;
-            
-            // Financials Page
-            document.getElementById('fin-collected').textContent = `₹${totalRev.toLocaleString()}`;
-            document.getElementById('fin-pending').textContent = `₹${totalPend.toLocaleString()}`;
 
             const finBody = document.getElementById('fin-register-table');
             finBody.innerHTML = '';
             data.students.forEach(s => {
-                const statusHtml = s.fees.pending === 0 
-                    ? '<span class="badge badge-success">Cleared</span>'
-                    : '<span class="badge badge-danger">Due</span>';
+                // Guard: students may not have fees object (older records)
+                const fees = s.fees || { total: 0, paid: 0, pending: 0 };
+                const statusHtml = fees.pending === 0 
+                    ? '<span style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;font-weight:700;">Cleared</span>'
+                    : '<span style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;font-weight:700;">Due</span>';
+
+                totalRev += fees.paid;
+                totalPend += fees.pending;
                     
                 finBody.innerHTML += `
                     <tr>
                         <td>${s.rollNo}</td>
                         <td>${s.name}</td>
                         <td>${s.class}</td>
-                        <td>₹${s.fees.total.toLocaleString()}</td>
-                        <td class="${s.fees.pending === 0 ? 'text-success' : 'text-warning'}">₹${s.fees.paid.toLocaleString()}</td>
+                        <td>₹${fees.total.toLocaleString()}</td>
+                        <td style="color:${fees.pending === 0 ? 'var(--success)' : 'var(--warning)'}">₹${fees.paid.toLocaleString()}</td>
                         <td>${statusHtml}</td>
                     </tr>
                 `;
             });
 
-            // CMS Prefill
+            // Now display totals (after loop completes)
+            document.getElementById('tot-revenue').textContent = `₹${totalRev.toLocaleString()}`;
+            document.getElementById('fin-collected').textContent = `₹${totalRev.toLocaleString()}`;
+            document.getElementById('fin-pending').textContent = `₹${totalPend.toLocaleString()}`;
+
+
             if(data.content) {
                 document.getElementById('cms-name').value = data.content.schoolName;
                 document.getElementById('cms-title').value = data.content.heroTitle;
@@ -491,16 +493,30 @@
             actBrd.innerHTML = ''; dashBrd.innerHTML = '';
             
             const globals = data.notices.filter(n => n.type === 'global').sort((a,b)=>new Date(b.date)-new Date(a.date));
-            globals.forEach((n, i) => {
-                const html = `
-                    <div class="card" style="background: rgba(255,255,255,0.02); border-left: 3px solid var(--warning);">
-                        <div class="flex justify-between"><h4>${n.title}</h4> <span class="text-xs text-muted">${n.date}</span></div>
-                        <p class="text-sm text-secondary mt-2">${n.content}</p>
-                    </div>
-                `;
-                actBrd.innerHTML += html;
-                if(i < 3) dashBrd.innerHTML += html;
-            });
+            if(globals.length === 0) {
+                actBrd.innerHTML = "<p class='text-muted'>No broadcasts issued yet.</p>";
+                dashBrd.innerHTML = "<p class='text-muted'>No recent notices.</p>";
+            } else {
+                globals.forEach((n, i) => {
+                    const noticeId = n.id;
+                    const html = `
+                        <div class="card" id="notice-card-${noticeId}" style="background: rgba(255,255,255,0.02); border-left: 3px solid var(--warning);">
+                            <div class="flex justify-between" style="align-items:flex-start; gap:1rem;">
+                                <div style="flex:1;">
+                                    <div class="flex justify-between" style="gap:0.5rem; flex-wrap:wrap;">
+                                        <h4 style="margin-bottom:0.25rem;">${n.title}</h4>
+                                        <span class="text-xs text-muted" style="font-size:0.8rem;white-space:nowrap;">${n.date}</span>
+                                    </div>
+                                    <p class="text-sm text-secondary mt-2">${n.content}</p>
+                                </div>
+                                <button onclick="deleteNotice(${noticeId})" title="Delete Notice" style="background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:var(--accent-red); border-radius:var(--radius-sm); padding:0.3rem 0.7rem; cursor:pointer; font-size:0.8rem; white-space:nowrap; transition:background 0.2s; flex-shrink:0;" onmouseover="this.style.background='rgba(239,68,68,0.25)'" onmouseout="this.style.background='rgba(239,68,68,0.12)'">🗑 Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    actBrd.innerHTML += html;
+                    if(i < 3) dashBrd.innerHTML += html;
+                });
+            }
 
             // Academics
             const acadBody = document.getElementById('acad-students-table');
@@ -648,6 +664,15 @@
         window.removeFacility = function(index) {
             const data = db.getData();
             data.facilities.splice(index, 1);
+            db.saveData(data);
+            loadAdminData();
+        };
+
+        // Delete Broadcast Notice
+        window.deleteNotice = function(noticeId) {
+            if(!confirm('Delete this notice? It will be removed from all portals.')) return;
+            const data = db.getData();
+            data.notices = data.notices.filter(n => n.id !== noticeId);
             db.saveData(data);
             loadAdminData();
         };
