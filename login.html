@@ -15,12 +15,15 @@
         align-items: center;
         justify-content: center;
         min-height: 100vh;
+        max-width: 100vw;
+        overflow-x: hidden;
         background: linear-gradient(
           135deg,
           var(--bg-primary) 0%,
           var(--bg-secondary) 100%
         );
         position: relative;
+        padding: 2rem 1rem;
       }
 
       /* Abstract shapes for background */
@@ -143,6 +146,19 @@
         padding: 0.5rem;
         border-radius: var(--radius-sm);
       }
+
+      /* Responsive */
+      @media (max-width: 540px) {
+        .login-container { padding: 0; width: 100%; max-width: 100%; box-sizing: border-box; }
+        .login-card { padding: 1.5rem 1rem; width: 100%; }
+        .form-group.grid { grid-template-columns: 1fr !important; }
+        .back-btn { padding: 0.6rem 1rem; font-size: 0.8rem; margin-bottom: 1rem; }
+      }
+      @media (max-width: 360px) {
+        .login-card { padding: 1.25rem 1rem; }
+        .tabs { gap: 0.25rem; }
+        .tab-btn { font-size: 0.75rem; padding: 0.4rem 0.2rem; }
+      }
     </style>
   </head>
   <body>
@@ -222,7 +238,7 @@
             <a href="#" class="text-muted hover:underline" onclick="alert('Please contact your class teacher to reset your password.')">Forgot Password?</a>
           </div>
           <div class="text-center mt-4">
-            <small class="text-muted">Hint: S001 or 101 / password123</small>
+            <small class="text-muted">Hint: Name: <strong style="color:var(--accent-primary)">Test</strong> &bull; Roll: <strong style="color:var(--accent-primary)">10</strong> &bull; Class: <strong style="color:var(--accent-primary)">10-A</strong> &bull; Pass: <strong style="color:var(--accent-primary)">123pass</strong></small>
           </div>
         </form>
 

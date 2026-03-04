@@ -12,9 +12,11 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            max-width: 100vw;
+            overflow-x: hidden;
             background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             position: relative;
-            padding: 2rem 0;
+            padding: 2rem 1rem;
         }
 
         body::before, body::after {
@@ -75,6 +77,30 @@
             border-radius: var(--radius-sm);
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
+
+        .hint-box {
+            margin-top: 1.25rem;
+            padding: 0.75rem 1rem;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .hint-box strong { color: var(--accent-primary); }
+
+        /* Responsive: collapse 2-col grids on small screens */
+        @media (max-width: 540px) {
+            .login-container { width: 100%; max-width: 100%; padding: 0; box-sizing: border-box; }
+            .login-card { padding: 1.5rem 1rem; width: 100%; }
+            .form-group.grid { grid-template-columns: 1fr !important; }
+            .back-link { font-size: 0.8rem; margin-bottom: 1rem; }
+        }
+        @media (max-width: 360px) {
+            .login-card { padding: 1.25rem 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -133,6 +159,10 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block mt-8">Create Account</button>
+                <div class="hint-box">
+                    📌 <strong>Test Account:</strong> Name: <strong>Test</strong> &bull; Class: <strong>10-A</strong> &bull; Roll: <strong>10</strong><br>
+                    Password: <strong>123pass</strong> &bull; Email/Phone: any valid format
+                </div>
             </form>
         </div>
     </div>
