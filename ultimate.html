@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Ultimate Surprise</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #000;
+      overflow: hidden;
+    }
+    
+    /* Starry background */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle infinite alternate;
+    }
+    
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(0.8); box-shadow: 0 0 2px white; }
+      100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 8px white; }
+    }
+
+    .ticket-container {
+      background: linear-gradient(135deg, #FFD700, #F39C12);
+      border-radius: 15px;
+      padding: 5px;
+      margin: 30px auto;
+      max-width: 500px;
+      transform: rotate(-2deg);
+      box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+      animation: float 4s ease-in-out infinite;
+      position: relative;
+    }
+
+    .ticket {
+      background: #111;
+      color: #fff;
+      border: 2px dashed #FFD700;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    .ticket h2 {
+      color: #FFD700;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .ticket .barcode {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.5rem;
+      letter-spacing: 5px;
+      margin-top: 20px;
+      color: #aaa;
+    }
+
+    .glow-text {
+      font-size: 3rem;
+      color: #fff;
+      text-shadow: 0 0 10px #ff477e, 0 0 20px #ff477e, 0 0 40px #ff477e;
+      margin-bottom: 10px;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-15px) rotate(1deg); }
+      100% { transform: translateY(0px) rotate(-2deg); }
+    }
+
+    .firework {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      box-shadow: 
+        0 0 0 0 #ff477e,
+        0 0 0 0 #00d2ff,
+        0 0 0 0 #ffeb3b;
+      animation: bang 2s ease-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes bang {
+      to {
+        box-shadow: 
+          -200px -150px 0 -2px #ff477e,
+          200px -150px 0 -2px #00d2ff,
+          0px -250px 0 -2px #ffeb3b,
+          -100px -200px 0 -2px #3a0ca3,
+          100px -200px 0 -2px #f72585,
+          -150px 100px 0 -2px #4cc9f0,
+          150px 100px 0 -2px #4361ee;
+        opacity: 0;
+      }
+    }
+
+    /* Gallery Styles */
+    .gallery-container {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    .frame {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 10px 20px 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      border-radius: 5px;
+      transform: rotate(-2deg);
+      transition: transform 0.3s;
+      width: 250px;
+    }
+
+    .frame:nth-child(even) {
+      transform: rotate(2deg);
+    }
+    
+    .frame:hover {
+      transform: scale(1.05) rotate(0deg);
+      z-index: 10;
+    }
+
+    .frame img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: #ddd;
+      border: 1px solid #ccc;
+      color: #777;
+    }
+
+    .frame .caption {
+      color: #333;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1rem;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="stars" id="stars"></div>
+  <div class="firework"></div>
+
+  <div class="glass-container" style="background: rgba(20,20,20,0.8); border: 1px solid rgba(255,215,0,0.3); max-width: 900px; width: 95%;">
+    <h1 class="glow-text">The Ultimate Surprise!</h1>
+    <p style="font-size: 1.3rem; color: #ddd;">Kyunki ek simple birthday wish kafi nahi thi...</p>
+
+    <div class="ticket-container">
+      <div class="ticket">
+        <h2>V.I.P Pass 🎫</h2>
+        <p style="font-size: 1.2rem; margin: 15px 0; color: #eee; line-height: 1.6;">
+          <strong>Valid for:</strong> 1 Epic Birthday Party / Dinner <br>
+          <strong>To be paid by:</strong> Main (Teri Best Friend) 💸<br>
+          <strong>Expiry:</strong> Kabhi Nahi!
+        </p>
+        <p style="color: #FFD700; font-style: italic;">"Jaldi se plan bana aur mujhe bata, treat meri taraf se!"</p>
+        <div class="barcode">||| |||| | ||| || ||</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 30px; font-weight: bold; color: #ff99ac; font-size: 1.5rem;">
+      🎉 Happy Birthday Once Again! 🎉
+    </p>
+
+    <!-- Restart button just in case they want to relive the journey -->
+    <button class="btn" onclick="window.location.href='index.html'" style="margin-top: 20px; font-size: 0.9rem; padding: 10px 20px; background: transparent; border: 1px solid var(--primary);">Play Again 🔄</button>
+  </div>
+
+  <script>
+    // Generate fewer stars (70 instead of 150) and longer animation times to prevent lagging
+    const starsContainer = document.getElementById('stars');
+    for(let i = 0; i < 70; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.width = Math.random() * 3 + 'px';
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.animationDuration = (Math.random() * 4 + 2) + 's'; // 2s to 6s (slower)
+      star.style.animationDelay = (Math.random() * 3) + 's';
+      starsContainer.appendChild(star);
+    }
+  </script>
+</body>
+</html>

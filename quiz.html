@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friendship Test!</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .question-container {
+      margin: 20px 0;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .option-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      padding: 12px;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+    .option-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .option-btn.correct {
+      background: rgba(46, 204, 113, 0.6);
+      border-color: #2ecc71;
+    }
+    .option-btn.wrong {
+      background: rgba(231, 76, 60, 0.6);
+      border-color: #e74c3c;
+      animation: shake 0.5s;
+    }
+    
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-container">
+    <h1>Level 2: Dosti ka Imtihaan 🕵️‍♂️</h1>
+    <p>Dekhte hain tum mujhe kitna jaante ho!</p>
+    
+    <div id="quiz-box">
+      <h2 id="question-text" style="font-size: 1.4rem; margin-bottom: 20px;">Question will appear here</h2>
+      <div class="options" id="options-container">
+        <!-- Buttons injected by JS -->
+      </div>
+    </div>
+
+    <button id="next-btn" class="btn hidden" onclick="window.location.href='game2.html'" style="margin-top:30px;">Great! Agla Padao 👉</button>
+  </div>
+
+  <script>
+    // Customize these questions for the birthday person!
+    const questions = [
+      {
+        question: "Humaari sabse pehli mulaqaat kahan hui thi?",
+        options: ["School mein", "College mein", "Ek party mein", "Bhool gaya yaar"],
+        answer: 0 // Index of correct answer
+      },
+      {
+        question: "Mera favorite khana kya hai?",
+        options: ["Pizza", "Biryani", "Maggi", "Kuch bhi chalega!"],
+        answer: 1
+      },
+      {
+        question: "Hum relationship mein kab aaye the?",
+        options: ["14 February", "10 March", "11 March", "1 April"],
+        answer: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const nextBtn = document.getElementById('next-btn');
+    const quizBox = document.getElementById('quiz-box');
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      questionText.textContent = `Q${currentQuestion + 1}: ${q.question}`;
+      optionsContainer.innerHTML = '';
+      
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.classList.add('option-btn');
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(index, btn);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+      // Disable all buttons after click
+      const allBtns = optionsContainer.querySelectorAll('.option-btn');
+      allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+      const correctIndex = questions[currentQuestion].answer;
+      
+      if (selectedIndex === correctIndex) {
+        btnElement.classList.add('correct');
+        setTimeout(() => {
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            loadQuestion();
+          } else {
+            quizBox.innerHTML = '<h2>Sahi Jawab! ♥️</h2><p>Tu sach mein meri sabse achi bestie (dost) hai!</p>';
+            nextBtn.classList.remove('hidden');
+            nextBtn.style.animation = 'pulse 2s infinite';
+          }
+        }, 1000);
+      } else {
+        btnElement.classList.add('wrong');
+        setTimeout(() => {
+          alert('Galat jawab! Kaisi dost hai tu? Dobara try kar! 😜');
+          // re-enable buttons
+          allBtns.forEach(b => {
+            b.style.pointerEvents = 'auto';
+            b.classList.remove('wrong');
+          });
+        }, 600);
+      }
+    }
+
+    // Start
+    loadQuestion();
+  </script>
+</body>
+</html>

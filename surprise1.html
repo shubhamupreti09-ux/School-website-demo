@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Gift</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .gift-container {
+      margin: 50px auto;
+      perspective: 800px;
+      cursor: pointer;
+    }
+    .gift-box {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border-radius: 10px;
+      transition: transform 0.1s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .gift-box::before, .gift-box::after {
+      content: "";
+      position: absolute;
+      background: #f1c40f;
+    }
+    /* Vertical ribbon */
+    .gift-box::before {
+      width: 30px;
+      height: 100%;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    /* Horizontal ribbon */
+    .gift-box::after {
+      width: 100%;
+      height: 30px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+    .gift-lid {
+      width: 170px;
+      height: 40px;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      position: absolute;
+      top: -20px;
+      left: -10px;
+      border-radius: 5px;
+      z-index: 10;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+      transition: all 0.5s ease;
+      transform-origin: bottom center;
+    }
+    /* Ribbon on lid */
+    .gift-lid::before {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 100%;
+      background: #f1c40f;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    /* Bow */
+    .bow {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 30px;
+      z-index: 15;
+      transition: all 0.5s ease;
+    }
+    .bow::before, .bow::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border: 5px solid #f1c40f;
+      border-radius: 50% 50% 0 50%;
+      transform: rotate(45deg);
+      top: 0;
+    }
+    .bow::before { left: 5px; }
+    .bow::after { 
+      right: 5px; 
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+    }
+
+    .taps-left {
+      font-size: 1.2rem;
+      margin-top: 20px;
+      color: #ff99ac;
+      font-weight: 600;
+    }
+
+    .heartfelt-message {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: fadeIn 1.5s ease-in-out forwards;
+      text-align: center;
+    }
+    .heartfelt-message p {
+      font-size: 1.3rem;
+      color: #fff;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-container" style="max-width: 900px; width: 95%;">
+    <h1 id="title">Ek aur Surprise!</h1>
+    <p id="desc">Is gift box ko open karne ke liye is par 5 baar tap karo!</p>
+    
+    <div class="gift-container" id="gift" onclick="tapGift()">
+      <div class="gift-box" id="box">
+        <div class="gift-lid" id="lid"></div>
+        <div class="bow" id="bow"></div>
+      </div>
+    </div>
+    
+    <div class="taps-left" id="taps">Taps left: 5</div>
+
+    <div class="heartfelt-message" id="memories">
+      <p>Ye saal tumhari zindagi ka sabse behtareen saal ho! ✨</p>
+      <p>Har din nayi khushiyon aur nayi umeedo se bhara ho. 🌸</p>
+      <p style="font-size: 1.5rem; color: #ffeb3b; margin-top: 15px;">Stay happy, stay crazy!</p>
+      <p>Aur meri taraf se bohot saara pyaar! 💖</p>
+    </div>
+    
+    <button id="next-btn" class="btn hidden" onclick="window.location.href='ultimate.html'" style="margin-top:40px;">Ek Aakhiri Cheez... ✨</button>
+  </div>
+
+  <script>
+    let taps = 5;
+    const box = document.getElementById('box');
+    const lid = document.getElementById('lid');
+    const bow = document.getElementById('bow');
+    const tapsEl = document.getElementById('taps');
+    const memories = document.getElementById('memories');
+    const nextBtn = document.getElementById('next-btn');
+    const giftContainer = document.getElementById('gift');
+
+    function tapGift() {
+      if(taps <= 0) return;
+      
+      taps--;
+      tapsEl.textContent = `Taps left: ${taps}`;
+      
+      // shake effect
+      box.style.transform = `scale(0.95) rotate(${Math.random() > 0.5 ? '3deg' : '-3deg'})`;
+      setTimeout(() => box.style.transform = 'scale(1) rotate(0deg)', 100);
+
+      if(taps === 0) {
+        // Open Box
+        tapsEl.style.display = 'none';
+        
+        // animate lid and bow flying off
+        lid.style.transform = 'translateY(-100px) rotate(-20deg)';
+        lid.style.opacity = '0';
+        bow.style.transform = 'translateY(-120px) rotate(-20deg)';
+        bow.style.opacity = '0';
+        
+        setTimeout(() => {
+          giftContainer.style.display = 'none';
+          document.getElementById('title').textContent = "A Special Wish For You! 💝";
+          document.getElementById('desc').style.display = 'none';
+          memories.style.display = 'flex';
+          
+          setTimeout(() => {
+            nextBtn.classList.remove('hidden');
+            nextBtn.style.animation = 'pulse 2s infinite';
+          }, 2000);
+        }, 600);
+      }
+    }
+  </script>
+</body>
+</html>

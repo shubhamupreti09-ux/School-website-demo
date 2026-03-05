@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pop the Balloons!</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .game-area {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .balloon {
+      position: absolute;
+      width: 50px;
+      height: 60px;
+      background: radial-gradient(circle at 30% 30%, #ff7ea5, var(--primary));
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      cursor: crosshair;
+      bottom: -70px; /* Start below the container */
+      box-shadow: inset 5px 5px 10px rgba(255, 255, 255, 0.3);
+      transition: transform 0.1s;
+    }
+
+    .balloon::before {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 8px solid var(--primary);
+    }
+
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      width: 1px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .balloon:active {
+      transform: scale(0.9);
+    }
+
+    .bomb-balloon {
+      background: radial-gradient(circle at 30% 30%, #555, #111) !important;
+    }
+    .bomb-balloon::before {
+      border-bottom-color: #111 !important;
+    }
+
+    .score-board {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 15px;
+      color: var(--accent);
+    }
+
+    @keyframes floatUp {
+      0% { bottom: -70px; transform: translateX(0); }
+      50% { transform: translateX(20px); }
+      100% { bottom: 110%; transform: translateX(-20px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-container" style="max-width: 800px; width: 95%;">
+    <h1>Level 3: Balloon Pop 🎈</h1>
+    <p>10 Balloons ko pop karo aur aage badho!</p>
+    
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+
+    <div class="game-area" id="game-area">
+      <!-- Balloons will be spawned here -->
+    </div>
+
+    <button id="next-btn" class="btn hidden" onclick="window.location.href='final.html'" style="margin-top:20px;">Final Surprise 🎉</button>
+  </div>
+
+  <script>
+    const gameArea = document.getElementById('game-area');
+    const scoreEl = document.getElementById('score');
+    const nextBtn = document.getElementById('next-btn');
+    
+    let score = 0;
+    const targetScore = 10;
+    let spawnInterval;
+    const colors = [
+      ['#ff7ea5', '#ff477e'], // pink
+      ['#6eea8a', '#2ecc71'], // green
+      ['#6eb3ea', '#3498db'], // blue
+      ['#ead16e', '#f1c40f'], // yellow
+      ['#b97eea', '#9b59b6']  // purple
+    ];
+
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+
+      // Random position (left)
+      const maxLeft = gameArea.clientWidth - 50;
+      const leftPos = Math.random() * maxLeft;
+      balloon.style.left = `${leftPos}px`;
+
+      // Is it a bomb? (~25% chance to make it tougher)
+      const isBomb = Math.random() < 0.25;
+      
+      if (isBomb) {
+        balloon.classList.add('bomb-balloon');
+        balloon.innerHTML = '<span style="position:absolute; top:45%; left:50%; transform:translate(-50%, -50%); font-size:1.5rem;">💣</span>';
+        balloon.dataset.bomb = "true";
+      } else {
+        // Random color
+        const colorPair = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.background = `radial-gradient(circle at 30% 30%, ${colorPair[0]}, ${colorPair[1]})`;
+        balloon.style.setProperty('--primary', colorPair[1]);
+      }
+
+      // Random speed between 2s and 4.5s (Faster!)
+      const duration = 2 + Math.random() * 2.5;
+      balloon.style.animation = `floatUp ${duration}s linear forwards`;
+
+      // Click event
+      balloon.addEventListener('mousedown', function() {
+        popBalloon(this);
+      });
+      // For touch screens
+      balloon.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        popBalloon(this);
+      });
+
+      // Remove after animation finishes
+      balloon.addEventListener('animationend', () => {
+        if (balloon.parentNode) {
+          gameArea.removeChild(balloon);
+        }
+      });
+
+      gameArea.appendChild(balloon);
+    }
+
+    function popBalloon(balloonElement) {
+      if(!balloonElement.parentNode) return;
+      
+      const isBomb = balloonElement.dataset.bomb === "true";
+
+      // visual pop effect
+      balloonElement.style.transform = 'scale(1.5)';
+      balloonElement.style.opacity = '0';
+      
+      setTimeout(() => {
+        if(balloonElement.parentNode) {
+          gameArea.removeChild(balloonElement);
+        }
+      }, 100);
+
+      if (isBomb) {
+        // Reset score
+        score = 0;
+        scoreEl.textContent = score;
+        gameArea.style.border = "2px dashed red";
+        gameArea.innerHTML += '<h2 id="bomb-warn" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:red; text-shadow: 0 0 10px red;">BOOM! Restart 💥</h2>';
+        setTimeout(() => {
+          gameArea.style.border = "2px dashed rgba(255, 255, 255, 0.3)";
+          const warn = document.getElementById('bomb-warn');
+          if(warn) warn.remove();
+        }, 800);
+        return;
+      }
+
+      score++;
+      scoreEl.textContent = score;
+
+      if (score >= targetScore) {
+        clearInterval(spawnInterval);
+        gameArea.innerHTML = '<h2 style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:#fff; text-shadow: 0 0 10px #fff;">Wah! You did it! 👏</h2>';
+        nextBtn.classList.remove('hidden');
+        nextBtn.style.animation = 'pulse 2s infinite';
+      }
+    }
+
+    function startGame() {
+      // Spawn a balloon every 500ms (Faster spawn!)
+      spawnInterval = setInterval(() => {
+        if(score < targetScore) {
+          createBalloon();
+        }
+      }, 500);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
